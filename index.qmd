@@ -1,0 +1,1157 @@
+---
+from: markdown+emoji
+execute: 
+  cache: true
+format: 
+  letterbox-revealjs:
+    theme: custom.scss
+    progress: false
+    menu: false
+    width: 1280
+    height: 720
+filters:
+  - custom-callouts
+callout-appearance: simple
+---
+
+```{r}
+#| include: false
+library(distributional)
+```
+
+## {}
+
+::: columns
+::: {.column width="37.5%"}
+![](resources/UseR-24-logo-white.svg){style="margin-left:-30px"}
+:::
+::: {.column width="60%"}
+
+::: {.title data-id="title"}
+Statistical computing with vectorised operations on distributions
+:::
+
+::: {.dateplace}
+9th July 2024 @ UseR! 2024
+:::
+
+Mitchell O'Hara-Wild, Monash University
+
+::: {.smaller}
+Supervised by Rob Hyndman and George Athanasopoulos
+:::
+
+::: {.callout-link}
+
+## Useful links
+
+![](resources/forum.svg){.icon} [social.mitchelloharawild.com](https://social.mitchelloharawild.com/)
+
+![](resources/projector-screen-outline.svg){.icon} [slides.mitchelloharawild.com/user2024](https://slides.mitchelloharawild.com/user2024)
+
+![](resources/github.svg){.icon} [mitchelloharawild/talk-distributional](https://github.com/mitchelloharawild/talk-distributional)
+
+:::
+
+:::
+:::
+
+![](backgrounds/muhammad-irfan-rr1l8zXPX64-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Using distributions in R
+
+As a statistical computing language, writing analysis R code often involves distributions.
+
+::: {.fragment .fade-in}
+::: {.callout-note}
+## Common uses of distributions
+
+::: {.incremental}
+* Predictions from models
+* Simulation studies
+* Hypothesis testing
+* Teaching statistics
+:::
+:::
+:::
+
+::: {.fragment .fade-in}
+::: {.callout-tip}
+## Plentiful packages
+
+The [probability distributions CRAN Task View](https://cran.r-project.org/web/views/Distributions.html) lists over 300 packages for probability distributions!
+:::
+:::
+
+:::
+:::
+
+![](backgrounds/aditya-chinchure-hyN9aU9Tm-c-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Using distributions in R
+
+::: {.callout-important}
+## Problems with probability
+
+[Using distributions in R is unnecessarily complex!]{.fragment .fade-in}
+
+:::
+
+::: {.fragment .fade-in}
+
+::: {.callout-note}
+## Difficult distributions
+
+There are two fundamental problems that make distributions difficult to use in R.
+
+::: {.incremental}
+1. The design of distribution functions
+2. The distribution outputs of models and tests
+:::
+:::
+:::
+
+::: {.fragment .fade-in}
+::: {.callout-tip}
+## A better way?
+
+Improved *distributional* designs overcomes these issues.
+:::
+:::
+
+:::
+:::
+
+![](backgrounds/aditya-chinchure-hyN9aU9Tm-c-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### R's distribution functions
+
+The included distributions in R (and many extension packages) use p/d/q/r functions for statistical operations on distributions.
+
+::: {.callout-note}
+## The p/d/q/r functions
+
+These functions allow you to calculate statistical operations from distributions:
+
+* `p`: The 'probability' (CDF)
+* `d`: The 'density' (PDF)
+* `q`: The 'quantiles'
+* `r`: The 'random' samples
+
+Some packages also define `m` functions for moments!
+:::
+
+
+:::
+:::
+
+![](backgrounds/aditya-chinchure-hyN9aU9Tm-c-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### R's distribution functions
+
+::: {.callout-note}
+## Using p/d/q/r functions
+
+These operation prefixes are used in conjunction with the distribution's shape. The general form is:
+
+::: {style="font-family: monospace;"}
+[\<op\>]{style="color: #B388EB;"}[\<shape\>]{style="color: #084887;"}([\<args\>]{style="color: #B388EB;"}, [\<parameters\>]{style="color: #8093f1;"})
+:::
+
+:::{.fragment .fade-in}
+For example, the density ([**p**]{style="color: #B388EB;"}) at [**0.5**]{style="color: #B388EB;"} of a Normal ([**norm**]{style="color: #084887;"}) distribution with mean [**1**]{style="color: #8093f1;"} and standard deviation [**3**]{style="color: #8093f1;"} is:
+
+::: {style="font-family: monospace;"}
+[p]{style="color: #B388EB;"}[norm]{style="color: #084887;"}([q = 0.5]{style="color: #B388EB;"}, [mean = 1, sd = 3]{style="color: #8093f1;"})
+:::
+
+```{r}
+pnorm(0.5, mean = 1, sd = 3)
+```
+
+:::
+:::{.fragment .fade-in}
+The quantile at probability 0.975 is:
+
+::: {style="font-family: monospace;"}
+[q]{style="color: #B388EB;"}[norm]{style="color: #084887;"}([p = 0.975]{style="color: #B388EB;"}, [mean = 1, sd = 3]{style="color: #8093f1;"})
+:::
+
+```{r}
+qnorm(0.975, mean = 1, sd = 3)
+```
+
+:::
+
+:::
+
+:::{.fragment .fade-in}
+::: {.callout-important}
+## Name conflicts
+
+Ever saved your dataset as `df` or `dt`? Think again!
+:::
+:::
+
+:::
+:::
+
+![](backgrounds/aditya-chinchure-hyN9aU9Tm-c-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### R's distribution functions
+
+::: {.callout-warning}
+## Risky recycling
+
+These p/d/q/r functions are **vectorised** and **fast** :tada:
+
+[***How*** these functions vectorise inputs is surprising :ghost:]{.fragment .fade-in}
+:::
+
+::: {.fragment .fade-in}
+Let's calculate 95% intervals of N(1,9).
+
+```{r}
+#| echo: true
+qnorm(c(0.025, 0.975), mean = 1, sd = 3)
+```
+:::
+
+::: {.fragment .fade-in}
+Great! What about multiple distributions N(1,9), N(3,4), N(-1, 16) and N(2, 1)?
+
+```{r}
+#| echo: true
+qnorm(c(0.025, 0.975), 
+      mean = c(1, 3, -1, 2), sd = c(3, 2, 4, 1))
+```
+:::
+
+:::
+:::
+
+![](backgrounds/aditya-chinchure-hyN9aU9Tm-c-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### R's distribution functions
+
+::: {.callout-tip}
+## Well designed functions have...
+
+* Clear and descriptive function names
+* Well-defined and named parameters
+* Minimal code duplication
+* Predictable behaviour
+
+:::
+
+::: {.fragment .fade-in}
+::: {.callout-important}
+## Design drawbacks
+
+The p/d/q/r design leaves much to be desired.
+
+* Short and confusing function names
+* Mixed parameters between operation and distribution
+* Surprising recycling behaviour
+
+:::
+:::
+
+:::
+:::
+
+![](backgrounds/aditya-chinchure-hyN9aU9Tm-c-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### R's modelling output
+
+The distributional nature of predictions and hypothesis testing is de-emphasised in R.
+
+::: {.callout-tip}
+## Predicting penguins
+
+Consider the output when using `predict()` on a `lm()` for the length of penguin bills using depth and species.
+
+```{r}
+#| echo: true
+fit <- lm(
+  bill_length_mm ~ species*bill_depth_mm, 
+  data = palmerpenguins::penguins
+)
+predict(fit, tail(palmerpenguins::penguins))
+```
+:::
+
+::: {.callout-warning}
+## Where's the uncertainty!
+
+By default, predictions only return the expected value.
+:::
+
+:::
+:::
+
+![](backgrounds/aditya-chinchure-hyN9aU9Tm-c-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### R's modelling output
+
+::: {.callout-tip}
+## Finding uncertainty!
+
+To obtain the other parameters for the distribution, we set `se.fit = TRUE` in `predict()`.
+```{r}
+#| echo: true
+predict(fit, tail(palmerpenguins::penguins), 
+        se.fit = TRUE)
+```
+
+[This gives more than just standard errors...]{.fragment .fade-in} [but still no probability distribution.]{.fragment .fade-in}
+:::
+:::
+:::
+
+![](backgrounds/aditya-chinchure-hyN9aU9Tm-c-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### R's modelling output
+
+Here's the code to obtain 95\% prediction intervals for the penguins data:
+
+```{r}
+#| echo: true
+#| eval: false
+pred <- predict(fit, tail(palmerpenguins::penguins), se.fit = TRUE)
+sprintf(
+  "[%f, %f]95",
+  pred$fit + qt(0.025, df = pred$df) * pred$se.fit,
+  pred$fit + qt(0.975, df = pred$df) * pred$se.fit
+)
+```
+
+
+```{r}
+pred <- predict(fit, tail(palmerpenguins::penguins), se.fit = TRUE)
+cat(sprintf(
+  "[%f, %f]95",
+  pred$fit + qt(0.025, df = pred$df) * sqrt(pred$se.fit^2),
+  pred$fit + qt(0.975, df = pred$df) * sqrt(pred$se.fit^2)
+), sep = "\n")
+```
+
+:::{.fragment .fade-in}
+:::{.callout-important}
+## Not quite right
+
+The above calculations are for **confidence intervals**, not prediction intervals! [Did you notice? Probably not!]{.fragment .fade-in}
+:::
+:::
+:::
+:::
+
+![](backgrounds/aditya-chinchure-hyN9aU9Tm-c-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### R's modelling output
+
+The correct code for **prediction intervals** is:
+
+```{r}
+#| echo: true
+#| eval: false
+pred <- predict(fit, tail(palmerpenguins::penguins), se.fit = TRUE)
+sprintf(
+  "[%f, %f]95",
+  pred$fit + qt(0.025, df = pred$df) * sqrt(pred$se.fit^2 + pred$residual.scale^2),
+  pred$fit + qt(0.975, df = pred$df) * sqrt(pred$se.fit^2 + pred$residual.scale^2)
+)
+```
+
+
+```{r}
+pred <- predict(fit, tail(palmerpenguins::penguins), se.fit = TRUE)
+cat(sprintf(
+  "[%f, %f]95",
+  pred$fit + qt(0.025, df = pred$df) * sqrt(pred$se.fit^2 + pred$residual.scale^2),
+  pred$fit + qt(0.975, df = pred$df) * sqrt(pred$se.fit^2 + pred$residual.scale^2)
+), sep = "\n")
+```
+
+:::{.callout-important}
+## Making mistakes
+
+There's a lot to know about regression, distributions, and R functions to get correct prediction intervals. 
+
+It's easy to make mistakes (or ignore uncertainty).
+:::
+
+:::
+:::
+
+![](backgrounds/aditya-chinchure-hyN9aU9Tm-c-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+::: {.column width="37.5%"}
+:::
+
+::: {.column width="60%"}
+### Better distributions for R
+
+The **distributional** package makes it simpler to create and use distributions in R.
+
+::: {.callout-tip}
+## Design improvements
+
+The package design overcomes all earlier problems by:
+
+:::incremental
+
+* Creating distributions separately from operations
+
+  (with clear function and variable names)
+  
+* Statistical computing done with common functions
+
+  (the same function works for all distributions)
+  
+* Applying predictable recycling rules
+:::
+
+:::
+:::
+:::
+
+![](backgrounds/ian-fajardo-jYg-bmeMotE-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+::: {.column width="37.5%"}
+:::
+
+::: {.column width="60%"}
+### Better distributions for R
+
+::: {.callout-tip}
+## Creating a distribution
+
+All distributions in the package start with `dist_*()`.
+
+To create a normal distribution, we use `dist_normal()`.
+
+```{r}
+#| echo: true
+library(distributional)
+dist_normal(1, 3)
+```
+
+:::
+
+::: {.callout-note}
+The package currently supports:
+
+* 21 continuous distributions,
+* 9 discrete distributions,
+* p/d/q/r functions via `dist_wrap()`,
+* sample, degenerate and percentile distributions.
+
+:::
+:::
+:::
+
+![](backgrounds/ian-fajardo-jYg-bmeMotE-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+::: {.column width="37.5%"}
+:::
+
+::: {.column width="60%"}
+### Vectorised distributions
+
+::: {.callout-note}
+## Creating multiple distributions
+
+The package supports multiple distributions in a vector.
+```{r}
+#| echo: true
+dist_normal(mu = c(1, 3, -1, 2), sigma = c(3, 2, 4, 1))
+```
+
+You can even mix distributions of different shapes.
+```{r}
+#| echo: true
+c(
+  dist_normal(mu = c(1, 3, -1, 2), sigma = c(3, 2, 4, 1)),
+  dist_gamma(2,1)
+)
+```
+
+:::
+
+:::
+:::
+
+![](backgrounds/ian-fajardo-jYg-bmeMotE-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+::: {.column width="37.5%"}
+:::
+
+::: {.column width="60%"}
+### Vectorised distributions
+
+Since distributions are vectors, they work great with data frames and the tidyverse.
+
+```{r}
+#| echo: true
+tibble::tibble(
+  x = 1:4,
+  y = dist_normal(mu = c(1, 3, -1, 2), sigma = c(3, 2, 4, 1))
+)
+```
+
+
+::: {.callout-tip}
+## Distributional predictions from models
+
+This allows model predictions to return entire distributions, making it easier to get the correct results.
+:::
+
+:::
+:::
+
+![](backgrounds/ian-fajardo-jYg-bmeMotE-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+::: {.column width="37.5%"}
+:::
+
+::: {.column width="60%"}
+### Vectorised distributions
+
+The `fable` package produces forecasts with distributions, making later analysis easy.
+
+```{r}
+#| echo: true
+library(fable)
+as_tsibble(sunspot.year) |> 
+  model(ARIMA(value)) |> 
+  forecast(h = "10 years")
+```
+
+
+:::
+:::
+
+![](backgrounds/ian-fajardo-jYg-bmeMotE-unsplash.jpg){.image-left}
+
+
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Statistical computation
+
+The p/d/q/r functions have more descriptive alternatives:
+
+* `p`->`cdf()`: The CDF
+* `d`->`density()`: The density (PDF)
+* `q`->`quantile()`: The quantile
+* `r`->`generate()`: Random samples 
+
+::: {.callout-tip}
+## Distributional operations
+
+These same functions are the same for any distribution.
+:::
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Statistical computation
+
+To calculate statistics like intervals:
+
+```{r}
+#| echo: true
+y <- dist_normal(mu = c(1, 3, -1, 2), sigma = c(3, 2, 4, 1))
+quantile(y, c(0.025, 0.975))
+```
+
+Or simply use the `hilo()` function:
+
+```{r}
+#| echo: true
+hilo(y, 95)
+```
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Statistical computation
+
+::: {.callout-tip}
+## Other operations
+
+There are many more statistics than p/d/q/r.
+
+* `log_likelihood()`/`likelihood()`
+* `hilo()`
+* `hdr()`
+* `support()`
+* `mean()`
+* `variance()`/`covariance()`
+* `skewness()`
+* `kurtosis()`
+:::
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Vectorised operations
+
+Vectorised operations in distributional are safer than the p/d/q/r equivalents.
+
+::: {.callout-note}
+## Vectorising in two ways
+
+There are two types of operation arguments:
+
+* `vector`/`matrix` inputs
+
+  Vectorises across distributions, then arguments.
+  
+  This approach is **simpler**, especially single arguments.
+  
+* `list`/`data.frame` inputs
+
+  Vectorises across arguments, then distributions.
+  
+  This approach is **more flexible and powerful**.
+:::
+
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Vectorised operations (vectors)
+
+```{r}
+#| echo: true
+(y <- c(dist_normal(0, 1), dist_beta(5, 1), dist_gamma(2, 1)))
+```
+
+Vectors/matrices apply the same operation inputs to each distribution.
+
+```{r}
+#| echo: true
+density(y, at = 0.65)
+density(y, at = c(0.65, 0.9))
+```
+
+
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Vectorised operations (vectors)
+
+::: {.callout-note}
+## Distributions in data analysis
+
+This also works well with data frames.
+
+```{r}
+#| echo: true
+tibble(y) |> 
+  dplyr::mutate(density(y, at = 0.65))
+```
+
+:::{.fragment .fade-in}
+Although its a bit tricky for more than one input.
+
+```{r}
+#| echo: true
+tibble(y) |> 
+  dplyr::mutate(density(y, at = c(0.65, 0.9)))
+```
+:::
+:::
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Vectorised operations (lists)
+
+```{r}
+#| echo: true
+(y <- c(dist_normal(0, 1), dist_beta(5, 1), dist_gamma(2, 1)))
+```
+
+Lists/data.frames recycle each input argument to the length of distributions.
+
+```{r}
+#| echo: true
+density(y, at = list(d1 = 0.65))
+density(y, at = list(d1 = 0.65, d2 = 0.9))
+```
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Vectorised operations (lists)
+
+```{r}
+#| echo: true
+(y <- c(dist_normal(0, 1), dist_beta(5, 1), dist_gamma(2, 1)))
+```
+
+This also allows vectorisation across both inputs and distributions.
+
+```{r}
+#| echo: true
+density(y, at = list(dens = c(0.65, 0.9, 0.3)))
+```
+
+::: {.fragment .fade-in}
+::: {.callout-tip}
+## Reliable recycling
+
+```{r}
+#| echo: true
+#| error: true
+density(y, list(dens = c(0.65, 0.9)))
+```
+
+:::
+:::
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Vectorised operations (lists)
+
+::: {.callout-note}
+## Distributions in data analysis
+
+This also works *really* well with data frames.
+
+```{r}
+#| echo: true
+tibble(y) |> 
+  dplyr::mutate(density(y, at = list(d1 = 0.65)))
+```
+
+:::{.fragment .fade-in}
+`mutate()` automatically unpacks the results if unnamed.
+
+```{r}
+#| echo: true
+tibble(y) |> 
+  dplyr::mutate(
+    density(y, at = list(d1 = 0.65, d2 = 0.9))
+  )
+```
+:::
+:::
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Modifying distributions
+
+Distributions can be used in the creation of new distributions.
+
+:::{.incremental}
+
+* `dist_inflated()`
+* `dist_truncated()`
+* `dist_transformed()`
+* `dist_mixture()`
+:::
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Modifying distributions
+
+::: {.callout-note}
+## Transforming distributions
+
+Where possible, the transformation directly changes the underlying distribution.
+```{r}
+#| echo: true
+dist_normal(1,3)
+```
+
+::: {.fragment .fade-in}
+```{r}
+#| echo: true
+2 + dist_normal(1,3)
+```
+:::
+::: {.fragment .fade-in}
+
+```{r}
+#| echo: true
+3 * (2 + dist_normal(1,3))
+```
+
+:::
+::: {.fragment .fade-in}
+
+```{r}
+#| echo: true
+exp(3 * (2 + dist_normal(1,3)))
+```
+:::
+
+:::
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+## {}
+
+::: columns
+
+::: {.column width="60%"}
+### Modifying distributions
+
+::: {.callout-note}
+## Transforming distributions
+
+In other cases, the transformation falls back to a 'transformed' distribution.
+```{r}
+#| echo: true
+(3 * (2 + dist_normal(1,3)))^2
+```
+
+::: {.fragment .fade-in}
+The statistics are calculated numerically, with symbolic differentiation where possible.
+
+```{r}
+#| echo: true
+x <- (3 * (2 + dist_normal(1,3)))^2
+mean(x)
+cdf(x, 0.5)
+```
+
+:::
+:::
+
+:::
+:::
+
+![](backgrounds/dustin-humes-9CWwJYvNJ4k-unsplash.jpg){.image-right}
+
+
+## {}
+
+::: columns
+
+
+::: {.column width="40%"}
+:::
+::: {.column width="60%"}
+### Visualising distributions
+
+::: {.sticker-float}
+![](media/ggdist.svg)
+:::
+
+The [ggdist](https://mjskay.github.io/ggdist/) package by Matthew Kay ([@mjskay](https://github.com/mjskay)) extends [ggplot2](https://ggplot2.tidyverse.org/) with support for visualising distributions in many ways.
+
+It works directly with **distributional vectors**!
+
+![](media/ggdist-preview.png)
+
+:::
+:::
+
+![](backgrounds/kasia-derenda-gckY9S3DxHg-unsplash.jpg){.image-left}
+
+## {}
+
+::: columns
+
+
+::: {.column width="40%"}
+:::
+::: {.column width="60%"}
+### Visualising distributions
+
+```{r}
+#| echo: true
+library(ggdist)
+library(ggplot2)
+df <- tibble::tibble(
+  name = c("Gamma(2,1)", "Normal(5,1)", "Mixture"),
+  dist = c(dist_gamma(2,1), dist_normal(5,1),
+           dist_mixture(dist_gamma(2,1), dist_normal(5, 1), weights = c(0.4, 0.6)))
+)
+ggplot(df, aes(y = factor(name, levels = rev(name)))) +
+  stat_dist_halfeye(aes(dist = dist)) + 
+  labs(title = "Density function for a mixture of distributions", y = NULL, x = NULL)
+```
+
+
+:::
+:::
+
+![](backgrounds/kasia-derenda-gckY9S3DxHg-unsplash.jpg){.image-left}
+
+
+## {}
+
+::: columns
+::: {.column width="60%"}
+
+### Summary
+
+::: {.callout-tip}
+
+## Key ideas
+
+1. Be careful when using p/d/q/r functions
+1. Good design can prevent some common mistakes
+1. Consider using **distributional** in analysis/packages
+1. It's also a great teaching tool!
+:::
+
+::: {.fragment .fade-in}
+
+::: {.callout-paper}
+
+## Future work
+
+* Add more distributions (help please!)
+* Convolutions of distributions
+* Add moments of distributions
+* Create a hex sticker
+
+:::
+:::
+
+:::
+:::
+
+![](backgrounds/meric-dagli-7NBO76G5JsE-unsplash.jpg){.image-right}
+
+
+## Thanks for your time!
+
+::: columns
+::: {.column width="60%"}
+
+::: {.callout-tip}
+## Final remarks
+
+* Uncertainty shouldn't be an afterthought.
+* Easier statistics is better statistics.
+* Made with :heart: and [vctrs](https://vctrs.r-lib.org/).
+* Consider contributing to the package.
+
+  (distributions, documentation, ideas...)
+
+:::
+
+::: {.callout-link}
+
+## Useful links
+
+![](resources/forum.svg){.icon} [social.mitchelloharawild.com](https://social.mitchelloharawild.com/)
+
+![](resources/projector-screen-outline.svg){.icon} [slides.mitchelloharawild.com/user2024](https://slides.mitchelloharawild.com/user2024)
+
+![](resources/github.svg){.icon} [mitchelloharawild/talk-distributional](https://github.com/mitchelloharawild/talk-distributional)
+
+:::
+
+:::
+:::
+
+![](backgrounds/meric-dagli-7NBO76G5JsE-unsplash.jpg){.image-right}
+
+## Unsplash credits
+
+::: {.callout-unsplash}
+
+## Thanks to these Unsplash contributors for their photos
+
+```{r unsplash}
+#| echo: FALSE
+#| cache: TRUE
+library(httr)
+library(purrr)
+unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg.*"
+slides <- readLines("index.qmd")
+backgrounds <- slides[grepl("../backgrounds/.+?unsplash.jpg", slides)]
+images <- unique(sub(".*\\(backgrounds/(.+?)\\).*", "\\1", backgrounds))
+images <- images[grepl(unsplash_pattern, images)]
+ids <- sub(unsplash_pattern, "\\1", images)
+
+get_unsplash_credit <- function(id) {
+  unsplash_url <- "https://api.unsplash.com/" 
+  my_response <- httr::GET(unsplash_url, path = c("photos", id), query = list(client_id=Sys.getenv("UNSPLASH_ACCESS")))
+  xml <- content(my_response)
+  
+  name <- xml$user$name
+  desc <- xml$description%||%"Photo"
+  sprintf(
+    "* %s: [%s%s](%s)",
+    name,
+    strtrim(desc,60-nchar(name)),
+    if(nchar(desc)>(60-nchar(name))) "..." else "",
+    modify_url("https://unsplash.com/", path = file.path("photos", xml$id))
+  )
+}
+htmltools::includeMarkdown(paste0(map_chr(ids, get_unsplash_credit), collapse = "\n"))
+```
+
+:::
