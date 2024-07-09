@@ -990,7 +990,7 @@ $residual.scale
 <span id="cb19-4"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;distribution[5]&gt;
-[1] N(1, 9)   N(3, 4)   N(-1, 16) N(2, 1)   Γ(2, 1)  </code></pre>
+[1] N(1, 9)     N(3, 4)     N(-1, 16)   N(2, 1)     Gamma(2, 1)</code></pre>
 </div>
 </div>
 </div>
@@ -1013,7 +1013,7 @@ $residual.scale
 <span id="cb21-3"><a href=""></a>  <span class="at">y =</span> <span class="fu">dist_normal</span>(<span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">2</span>), <span class="at">sigma =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>))</span>
 <span id="cb21-4"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 2
+<pre><code># A tibble: 4 x 2
       x         y
   &lt;int&gt;    &lt;dist&gt;
 1     1   N(1, 9)
@@ -1204,7 +1204,7 @@ $residual.scale
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>(y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">dist_normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">dist_beta</span>(<span class="dv">5</span>, <span class="dv">1</span>), <span class="fu">dist_gamma</span>(<span class="dv">2</span>, <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;distribution[3]&gt;
-[1] N(0, 1)    Beta(5, 1) Γ(2, 1)   </code></pre>
+[1] N(0, 1)     Beta(5, 1)  Gamma(2, 1)</code></pre>
 </div>
 </div>
 <p>Vectors/matrices apply the same operation inputs to each distribution.</p>
@@ -1247,12 +1247,12 @@ $residual.scale
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href=""></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(y) <span class="sc">|&gt;</span> </span>
 <span id="cb35-2"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">density</span>(y, <span class="at">at =</span> <span class="fl">0.65</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 2
-           y `density(y, at = 0.65)`
-      &lt;dist&gt;                   &lt;dbl&gt;
-1    N(0, 1)                   0.323
-2 Beta(5, 1)                   0.893
-3    Γ(2, 1)                   0.339</code></pre>
+<pre><code># A tibble: 3 x 2
+            y `density(y, at = 0.65)`
+       &lt;dist&gt;                   &lt;dbl&gt;
+1     N(0, 1)                   0.323
+2  Beta(5, 1)                   0.893
+3 Gamma(2, 1)                   0.339</code></pre>
 </div>
 </div>
 <div class="fragment fade-in">
@@ -1261,12 +1261,12 @@ $residual.scale
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href=""></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(y) <span class="sc">|&gt;</span> </span>
 <span id="cb37-2"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">density</span>(y, <span class="at">at =</span> <span class="fu">c</span>(<span class="fl">0.65</span>, <span class="fl">0.9</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 2
-           y `density(y, at = c(0.65, 0.9))`
-      &lt;dist&gt; &lt;list&gt;                         
-1    N(0, 1) &lt;dbl [2]&gt;                      
-2 Beta(5, 1) &lt;dbl [2]&gt;                      
-3    Γ(2, 1) &lt;dbl [2]&gt;                      </code></pre>
+<pre><code># A tibble: 3 x 2
+            y `density(y, at = c(0.65, 0.9))`
+       &lt;dist&gt; &lt;list&gt;                         
+1     N(0, 1) &lt;dbl [2]&gt;                      
+2  Beta(5, 1) &lt;dbl [2]&gt;                      
+3 Gamma(2, 1) &lt;dbl [2]&gt;                      </code></pre>
 </div>
 </div>
 </div>
@@ -1285,7 +1285,7 @@ $residual.scale
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href=""></a>(y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">dist_normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">dist_beta</span>(<span class="dv">5</span>, <span class="dv">1</span>), <span class="fu">dist_gamma</span>(<span class="dv">2</span>, <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;distribution[3]&gt;
-[1] N(0, 1)    Beta(5, 1) Γ(2, 1)   </code></pre>
+[1] N(0, 1)     Beta(5, 1)  Gamma(2, 1)</code></pre>
 </div>
 </div>
 <p>Lists/data.frames recycle each input argument to the length of distributions.</p>
@@ -1317,7 +1317,7 @@ $residual.scale
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href=""></a>(y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">dist_normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">dist_beta</span>(<span class="dv">5</span>, <span class="dv">1</span>), <span class="fu">dist_gamma</span>(<span class="dv">2</span>, <span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;distribution[3]&gt;
-[1] N(0, 1)    Beta(5, 1) Γ(2, 1)   </code></pre>
+[1] N(0, 1)     Beta(5, 1)  Gamma(2, 1)</code></pre>
 </div>
 </div>
 <p>This also allows vectorisation across both inputs and distributions.</p>
@@ -1373,12 +1373,12 @@ $residual.scale
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href=""></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(y) <span class="sc">|&gt;</span> </span>
 <span id="cb51-2"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="fu">density</span>(y, <span class="at">at =</span> <span class="fu">list</span>(<span class="at">d1 =</span> <span class="fl">0.65</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 2
-           y    d1
-      &lt;dist&gt; &lt;dbl&gt;
-1    N(0, 1) 0.323
-2 Beta(5, 1) 0.893
-3    Γ(2, 1) 0.339</code></pre>
+<pre><code># A tibble: 3 x 2
+            y    d1
+       &lt;dist&gt; &lt;dbl&gt;
+1     N(0, 1) 0.323
+2  Beta(5, 1) 0.893
+3 Gamma(2, 1) 0.339</code></pre>
 </div>
 </div>
 <div class="fragment fade-in">
@@ -1389,12 +1389,12 @@ $residual.scale
 <span id="cb53-3"><a href=""></a>    <span class="fu">density</span>(y, <span class="at">at =</span> <span class="fu">list</span>(<span class="at">d1 =</span> <span class="fl">0.65</span>, <span class="at">d2 =</span> <span class="fl">0.9</span>))</span>
 <span id="cb53-4"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-           y    d1    d2
-      &lt;dist&gt; &lt;dbl&gt; &lt;dbl&gt;
-1    N(0, 1) 0.323 0.266
-2 Beta(5, 1) 0.893 3.28 
-3    Γ(2, 1) 0.339 0.366</code></pre>
+<pre><code># A tibble: 3 x 3
+            y    d1    d2
+       &lt;dist&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     N(0, 1) 0.323 0.266
+2  Beta(5, 1) 0.893 3.28 
+3 Gamma(2, 1) 0.339 0.366</code></pre>
 </div>
 </div>
 </div>
