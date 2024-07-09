@@ -1131,7 +1131,7 @@ library(httr)
 library(purrr)
 unsplash_pattern <- ".*-(.{11})-unsplash\\.jpg.*"
 slides <- readLines("index.qmd")
-backgrounds <- slides[grepl("../backgrounds/.+?unsplash.jpg", slides)]
+backgrounds <- slides[grepl("backgrounds/.+?unsplash.jpg", slides)]
 images <- unique(sub(".*\\(backgrounds/(.+?)\\).*", "\\1", backgrounds))
 images <- images[grepl(unsplash_pattern, images)]
 ids <- sub(unsplash_pattern, "\\1", images)
