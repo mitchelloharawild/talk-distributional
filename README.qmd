@@ -30,4 +30,4 @@ The package provides vectorised distributions and supports the calculation of va
 
 ### Format
 
-???
+20 minutes total (including Q&A)
