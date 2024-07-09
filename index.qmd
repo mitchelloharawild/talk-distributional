@@ -766,7 +766,7 @@ This also works well with data frames.
 
 ```{r}
 #| echo: true
-tibble(y) |> 
+tibble::tibble(y) |> 
   dplyr::mutate(density(y, at = 0.65))
 ```
 
@@ -775,7 +775,7 @@ Although its a bit tricky for more than one input.
 
 ```{r}
 #| echo: true
-tibble(y) |> 
+tibble::tibble(y) |> 
   dplyr::mutate(density(y, at = c(0.65, 0.9)))
 ```
 :::
@@ -865,7 +865,7 @@ This also works *really* well with data frames.
 
 ```{r}
 #| echo: true
-tibble(y) |> 
+tibble::tibble(y) |> 
   dplyr::mutate(density(y, at = list(d1 = 0.65)))
 ```
 
@@ -874,7 +874,7 @@ tibble(y) |>
 
 ```{r}
 #| echo: true
-tibble(y) |> 
+tibble::tibble(y) |> 
   dplyr::mutate(
     density(y, at = list(d1 = 0.65, d2 = 0.9))
   )
