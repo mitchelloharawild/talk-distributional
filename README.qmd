@@ -11,9 +11,9 @@ format: gfm
 
 Slides and notes for a talk at useR! 2024 (8th - 11th July 2024) in Salzburg, Austria.
 
-<!-- A recording of this presentation is available on YouTube here: <https://www.youtube.com/watch?v=FBM-nEbeHTw> -->
+A recording of this presentation is available on YouTube here: <https://www.youtube.com/watch?v=iM_6_tqTBSg>
 
-<!-- [![](preview.jpg)](https://www.youtube.com/watch?v=FBM-nEbeHTw) -->
+[![](preview.jpg)](https://www.youtube.com/watch?v=iM_6_tqTBSg)
 
 #### Abstract
 
